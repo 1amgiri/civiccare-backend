@@ -3,6 +3,8 @@ package com.civiccare.civiccare_backend.service;
 import com.civiccare.civiccare_backend.dto.CreateBloodDonorRequest;
 import com.civiccare.civiccare_backend.model.BloodDonor;
 import org.springframework.stereotype.Service;
+import com.civiccare.civiccare_backend.dto.UpdateBloodDonorRequest;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,28 @@ public class BloodDonorService {
         return result;
     }
 
+    public boolean updateDonor(int id, UpdateBloodDonorRequest request) {
+
+        for (BloodDonor donor : donors) {
+            if (donor.getId() == id) {
+
+                // Update only allowed fields
+                donor.setCity(request.getCity());
+                donor.setPhone(request.getPhone());
+                donor.setAvailable(request.isAvailable());
+
+                return true;
+            }
+        }
+        return false; // donor not found
+    }
+
+    public boolean deleteDonor(int id) {
+
+        return donors.removeIf(donor -> donor.getId() == id);
+    }
+
+
     public void addDonor(CreateBloodDonorRequest request) {
 
         BloodDonor donor = new BloodDonor(
@@ -49,4 +73,5 @@ public class BloodDonorService {
 
         donors.add(donor);
     }
+
 }

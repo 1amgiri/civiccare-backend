@@ -38,7 +38,21 @@ public class BloodDonor {
         return phone;
     }
 
+    // ✅ THIS WAS MISSING
     public boolean isAvailable() {
         return available;
+    }
+
+    // setters used in PUT
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

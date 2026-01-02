@@ -1,5 +1,6 @@
 package com.civiccare.civiccare_backend.controller;
 
+import com.civiccare.civiccare_backend.dto.UpdateBloodDonorRequest;
 import com.civiccare.civiccare_backend.dto.CreateBloodDonorRequest;
 import com.civiccare.civiccare_backend.model.BloodDonor;
 import com.civiccare.civiccare_backend.service.BloodDonorService;
@@ -33,4 +34,28 @@ public class BloodDonorController {
         bloodDonorService.addDonor(request);
         return "Donor added successfully";
     }
+    @PutMapping("/{id}")
+    public String updateBloodDonor(
+            @PathVariable int id,
+            @RequestBody UpdateBloodDonorRequest request) {
+
+        boolean updated = bloodDonorService.updateDonor(id, request);
+
+        if (!updated) {
+            return "Donor not found";
+        }
+        return "Donor updated successfully";
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteBloodDonor(@PathVariable int id) {
+
+        boolean deleted = bloodDonorService.deleteDonor(id);
+
+        if (!deleted) {
+            return "Donor not found";
+        }
+        return "Donor deleted successfully";
+    }
+
 }
