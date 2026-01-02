@@ -1,69 +1,44 @@
 package com.civiccare.civiccare_backend.service;
 
 import com.civiccare.civiccare_backend.dto.CreateBloodDonorRequest;
-import com.civiccare.civiccare_backend.model.BloodDonor;
-import org.springframework.stereotype.Service;
 import com.civiccare.civiccare_backend.dto.UpdateBloodDonorRequest;
+import com.civiccare.civiccare_backend.model.BloodDonor;
+import com.civiccare.civiccare_backend.repository.BloodDonorRepository;
+import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BloodDonorService {
 
-    private final List<BloodDonor> donors = new ArrayList<>();
-    private int idCounter = 1;
+    private final BloodDonorRepository bloodDonorRepository;
 
-    public BloodDonorService() {
-        donors.add(new BloodDonor(idCounter++, "Ravi", "O+", "Tirupati", "9876543210", true));
-        donors.add(new BloodDonor(idCounter++, "Suresh", "A+", "Tirupati", "9123456780", true));
-        donors.add(new BloodDonor(idCounter++, "Mahesh", "B+", "Chennai", "9000012345", true));
+    public BloodDonorService(BloodDonorRepository bloodDonorRepository) {
+        this.bloodDonorRepository = bloodDonorRepository;
     }
 
     public List<BloodDonor> getAllDonors() {
-        return donors;
+        return bloodDonorRepository.findAll();
     }
 
     public List<BloodDonor> getDonorsByGroup(String group) {
-
-        List<BloodDonor> result = new ArrayList<>();
-
-        for (BloodDonor donor : donors) {
-            if (donor.getBloodGroup().equalsIgnoreCase(group)
-                    && donor.isAvailable()) {
-                result.add(donor);
-            }
-        }
-        return result;
+        return bloodDonorRepository.findByBloodGroupAndAvailableTrue(group);
     }
-
-    public boolean updateDonor(int id, UpdateBloodDonorRequest request) {
-
-        for (BloodDonor donor : donors) {
-            if (donor.getId() == id) {
-
-                // Update only allowed fields
-                donor.setCity(request.getCity());
-                donor.setPhone(request.getPhone());
-                donor.setAvailable(request.isAvailable());
-
-                return true;
-            }
-        }
-        return false; // donor not found
-    }
-
-    public boolean deleteDonor(int id) {
-
-        return donors.removeIf(donor -> donor.getId() == id);
-    }
-
 
     public void addDonor(CreateBloodDonorRequest request) {
 
-        BloodDonor donor = new BloodDonor(
-                idCounter++,
+        BloodDonor donor = new BloodDonor();
+        donor.setAvailable(request.isAvailable());
+        donor.setCity(request.getCity());
+        donor.setPhone(request.getPhone());
+
+        // fields set only once
+        donor.setAvailable(request.isAvailable());
+
+        // set immutable fields via constructor-like approach
+        donor = new BloodDonor(
+                0,
                 request.getName(),
                 request.getBloodGroup(),
                 request.getCity(),
@@ -71,7 +46,33 @@ public class BloodDonorService {
                 request.isAvailable()
         );
 
-        donors.add(donor);
+        bloodDonorRepository.save(donor);
     }
 
+    public boolean updateDonor(int id, UpdateBloodDonorRequest request) {
+
+        Optional<BloodDonor> optionalDonor = bloodDonorRepository.findById(id);
+
+        if (optionalDonor.isEmpty()) {
+            return false;
+        }
+
+        BloodDonor donor = optionalDonor.get();
+        donor.setCity(request.getCity());
+        donor.setPhone(request.getPhone());
+        donor.setAvailable(request.isAvailable());
+
+        bloodDonorRepository.save(donor);
+        return true;
+    }
+
+    public boolean deleteDonor(int id) {
+
+        if (!bloodDonorRepository.existsById(id)) {
+            return false;
+        }
+
+        bloodDonorRepository.deleteById(id);
+        return true;
+    }
 }
