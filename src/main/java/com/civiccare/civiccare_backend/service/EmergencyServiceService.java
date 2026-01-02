@@ -1,23 +1,48 @@
 package com.civiccare.civiccare_backend.service;
 
 import com.civiccare.civiccare_backend.model.EmergencyService;
+import com.civiccare.civiccare_backend.repository.EmergencyServiceRepository;
 import org.springframework.stereotype.Service;
+import com.civiccare.civiccare_backend.dto.CreateEmergencyServiceRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class EmergencyServiceService {
 
+    private final EmergencyServiceRepository emergencyServiceRepository;
+
+    public EmergencyServiceService(EmergencyServiceRepository emergencyServiceRepository) {
+        this.emergencyServiceRepository = emergencyServiceRepository;
+    }
+
     public List<EmergencyService> getAllServices() {
+        return emergencyServiceRepository.findAll();
+    }
 
-        List<EmergencyService> services = new ArrayList<>();
+    public List<EmergencyService> getServicesByCity(String city) {
+        return emergencyServiceRepository.findByCity(city);
+    }
 
-        services.add(new EmergencyService(1, "Police", "100", "Tirupati", true));
-        services.add(new EmergencyService(2, "Ambulance", "108", "Tirupati", true));
-        services.add(new EmergencyService(3, "Fire", "101", "Tirupati", true));
-        services.add(new EmergencyService(4, "Police", "100", "Chennai", true));
+    public EmergencyService addService(EmergencyService service) {
+        return emergencyServiceRepository.save(service);
+    }
 
-        return services;
+    public boolean deleteService(int id) {
+        if (!emergencyServiceRepository.existsById(id)) {
+            return false;
+        }
+        emergencyServiceRepository.deleteById(id);
+        return true;
+    }
+    public EmergencyService addService(CreateEmergencyServiceRequest request) {
+
+        EmergencyService service = new EmergencyService();
+        service.setName(request.getName());
+        service.setPhone(request.getPhone());
+        service.setCity(request.getCity());
+        service.setVerified(request.isVerified());
+
+        return emergencyServiceRepository.save(service);
     }
 }
