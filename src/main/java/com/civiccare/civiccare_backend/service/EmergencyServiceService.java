@@ -28,7 +28,7 @@ public class EmergencyServiceService {
         return emergencyServiceRepository.save(service);
     }
 
-    public boolean deleteService(int id) {
+    public boolean deleteService(Long id) {
         if (!emergencyServiceRepository.existsById(id)) {
             return false;
         }

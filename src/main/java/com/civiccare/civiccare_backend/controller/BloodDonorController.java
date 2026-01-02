@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/blood-donors")
-@Validated
 public class BloodDonorController {
 
     private final BloodDonorService bloodDonorService;
@@ -24,14 +23,14 @@ public class BloodDonorController {
         this.bloodDonorService = bloodDonorService;
     }
 
-    @GetMapping("/paged")
-    public Page<BloodDonor> getDonorsPaged(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
+    @GetMapping
+    public List<BloodDonor> getDonors(
+            @RequestParam(required = false) String group
     ) {
-        return bloodDonorService.getDonorsWithPagination(page, size, sortBy, direction);
+        if (group == null || group.equalsIgnoreCase("ALL")) {
+            return bloodDonorService.getAllDonors();
+        }
+        return bloodDonorService.getDonorsByGroup(group);
     }
 
 
@@ -46,7 +45,7 @@ public class BloodDonorController {
 
     @PutMapping("/{id}")
     public String updateBloodDonor(
-            @PathVariable int id,
+            @PathVariable Long id,
             @RequestBody UpdateBloodDonorRequest request) {
 
         boolean updated = bloodDonorService.updateDonor(id, request);
@@ -58,7 +57,7 @@ public class BloodDonorController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteBloodDonor(@PathVariable int id) {
+    public String deleteBloodDonor(@PathVariable Long id) {
 
         boolean deleted = bloodDonorService.deleteDonor(id);
 

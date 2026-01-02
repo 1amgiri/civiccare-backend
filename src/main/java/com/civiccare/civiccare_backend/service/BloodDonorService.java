@@ -55,7 +55,7 @@ public class BloodDonorService {
         bloodDonorRepository.save(donor);
     }
 
-    public boolean updateDonor(int id, UpdateBloodDonorRequest request) {
+    public boolean updateDonor(Long id, UpdateBloodDonorRequest request) {
 
         Optional<BloodDonor> optionalDonor = bloodDonorRepository.findById(id);
 
@@ -72,7 +72,7 @@ public class BloodDonorService {
         return true;
     }
 
-    public boolean deleteDonor(int id) {
+    public boolean deleteDonor(Long id) {
 
         if (!bloodDonorRepository.existsById(id)) {
             return false;
