@@ -1,11 +1,22 @@
 package com.civiccare.civiccare_backend.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 public class CreateBloodDonorRequest {
 
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Blood group is required")
     private String bloodGroup;
+
+    @NotBlank(message = "City is required")
     private String city;
+
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be 10 digits")
     private String phone;
+
     private boolean available;
 
     public String getName() {
