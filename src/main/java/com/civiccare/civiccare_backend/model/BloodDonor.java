@@ -12,7 +12,8 @@ public class BloodDonor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    // FIX: The ID should be Long to match the repository methods
+    private Long id;
 
     private String name;
     private String bloodGroup;
@@ -24,16 +25,7 @@ public class BloodDonor {
     public BloodDonor() {
     }
 
-    public BloodDonor(int id, String name, String bloodGroup, String city, String phone, boolean available) {
-        this.id = id;
-        this.name = name;
-        this.bloodGroup = bloodGroup;
-        this.city = city;
-        this.phone = phone;
-        this.available = available;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -55,6 +47,14 @@ public class BloodDonor {
 
     public boolean isAvailable() {
         return available;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBloodGroup(String bloodGroup) {
+        this.bloodGroup = bloodGroup;
     }
 
     public void setCity(String city) {

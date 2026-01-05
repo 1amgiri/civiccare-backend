@@ -42,7 +42,6 @@ public class BloodDonorController {
         return "Donor added successfully";
     }
 
-
     @PutMapping("/{id}")
     public String updateBloodDonor(
             @PathVariable Long id,

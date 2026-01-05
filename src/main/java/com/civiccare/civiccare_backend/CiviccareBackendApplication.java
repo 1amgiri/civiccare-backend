@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CiviccareBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CiviccareBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CiviccareBackendApplication.class, args);
+    }
 
 }

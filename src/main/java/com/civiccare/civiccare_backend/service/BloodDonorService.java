@@ -9,11 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-
 
 @Service
 public class BloodDonorService {
@@ -33,25 +28,13 @@ public class BloodDonorService {
     }
 
     public void addDonor(CreateBloodDonorRequest request) {
-
+        // FIX: Use the default constructor and setters for robust instantiation
         BloodDonor donor = new BloodDonor();
-        donor.setAvailable(request.isAvailable());
+        donor.setName(request.getName());
+        donor.setBloodGroup(request.getBloodGroup());
         donor.setCity(request.getCity());
         donor.setPhone(request.getPhone());
-
-        // fields set only once
-        donor.setAvailable(request.isAvailable());
-
-        // set immutable fields via constructor-like approach
-        donor = new BloodDonor(
-                0,
-                request.getName(),
-                request.getBloodGroup(),
-                request.getCity(),
-                request.getPhone(),
-                request.isAvailable()
-        );
-
+        donor.setAvailable(true); // New donors are always available
         bloodDonorRepository.save(donor);
     }
 
@@ -81,18 +64,4 @@ public class BloodDonorService {
         bloodDonorRepository.deleteById(id);
         return true;
     }
-    public Page<BloodDonor> getDonorsWithPagination(
-            int page,
-            int size,
-            String sortBy,
-            String direction
-    ) {
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return bloodDonorRepository.findAll(pageable);
-    }
-
 }

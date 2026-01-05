@@ -17,6 +17,7 @@ public class CreateBloodDonorRequest {
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be 10 digits")
     private String phone;
 
+    // FIX: Add field back to match the frontend request body
     private boolean available;
 
     public String getName() {
