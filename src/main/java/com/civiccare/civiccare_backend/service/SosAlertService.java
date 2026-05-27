@@ -15,14 +15,14 @@ public class SosAlertService {
         this.sosAlertRepository = sosAlertRepository;
     }
 
-    public SosAlert createSos(Double latitude, Double longitude) {
+    public SosAlert createSos(Double latitude, Double longitude, String city, String userName) {
         SosAlert sos = new SosAlert();
         sos.setLatitude(latitude);
         sos.setLongitude(longitude);
         sos.setStatus("ACTIVE");
         sos.setCreatedAt(LocalDateTime.now());
-        sos.setUserName("John Citizen"); // later replace with auth user
-        sos.setCity("Tirupati");
+        sos.setUserName(userName != null ? userName : "John Citizen");
+        sos.setCity(city != null ? city : "Metropolis");
 
         return sosAlertRepository.save(sos);
     }

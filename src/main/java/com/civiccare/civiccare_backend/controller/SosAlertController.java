@@ -20,11 +20,13 @@ public class SosAlertController {
     }
 
     @PostMapping
-    public Map<String, Object> triggerSos(@RequestBody Map<String, Double> body) {
-        SosAlert sos = sosAlertService.createSos(
-                body.get("latitude"),
-                body.get("longitude")
-        );
+    public Map<String, Object> triggerSos(@RequestBody Map<String, Object> body) {
+        Double latitude = body.get("latitude") != null ? Double.valueOf(body.get("latitude").toString()) : 0.0;
+        Double longitude = body.get("longitude") != null ? Double.valueOf(body.get("longitude").toString()) : 0.0;
+        String city = body.get("city") != null ? body.get("city").toString() : "Metropolis";
+        String userName = body.get("userName") != null ? body.get("userName").toString() : "John Citizen";
+
+        SosAlert sos = sosAlertService.createSos(latitude, longitude, city, userName);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 

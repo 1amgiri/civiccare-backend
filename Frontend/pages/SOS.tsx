@@ -10,6 +10,13 @@ const SOS: React.FC = () => {
 
   const handleSOS = () => {
     setIsTriggering(true);
+    
+    // Retrieve logged-in user data for localized reporting
+    const savedUser = localStorage.getItem('civiccare_user_data');
+    const user = savedUser ? JSON.parse(savedUser) : null;
+    const city = user?.city || 'Metropolis';
+    const userName = user?.name || 'John Citizen';
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
@@ -17,6 +24,8 @@ const SOS: React.FC = () => {
             const res = await api.post('/sos', {
               latitude: pos.coords.latitude,
               longitude: pos.coords.longitude,
+              city,
+              userName
             });
             setResponse(res.data);
           } catch (err) {
